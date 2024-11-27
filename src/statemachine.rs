@@ -13,6 +13,7 @@ impl Statemachine
         //let mut states = HashMap::<String,Box<dyn State>>::new();
         //states.insert(tag.clone(), start_state);
 
+        // haha
         let machine = Statemachine { current_state : start_state };
         machine.current_state.enter();
 
