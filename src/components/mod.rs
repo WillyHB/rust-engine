@@ -7,3 +7,4 @@ pub mod itag;
 pub mod stag;
 pub mod animated_sprite;
 pub mod sprite_renderer;
+pub mod component;

@@ -1,7 +1,8 @@
 use animated_sprite::{AnimatedSprite};
 use animator::Animator;
 use collider::{apply_collision, Collider};
-use component::Component;
+use bevy_ecs::component::Component;
+use components::component::{Entity, MyComponent, ECS};
 use macroquad::audio::{self, load_sound, PlaySoundParams};
 use macroquad::camera::{self, set_camera, set_default_camera, Camera2D};
 use macroquad::color::{self, rgb_to_hsl, Color, BLACK, BLUE, ORANGE, RED, WHITE};
@@ -37,6 +38,21 @@ struct Position {
     vec : Vec2,
 }
 
+/*
+impl MyComponent for Position {
+
+    fn update(&mut self, entity : &Entity, entities : Rc<&mut ECS>) {
+        
+        println!("Ohhh Now position updating");
+        //self.vec += entity.get_component::<Velocity>().expect("bruh").vec;
+    }
+
+    fn as_any(&self) -> &dyn std::any::Any {
+        self
+    }
+}
+    */
+
 
 #[derive(Component)]
 struct Speed {
@@ -62,10 +78,6 @@ fn window_conf() -> Conf {
 #[macroquad::main(window_conf)]
 async fn main() -> Result<(), String> {
 
-    let i = 3;
-    let f = || { println!("Updating lol {}", i) };
-
-    
     // MAKE FUNCTIONS CUSTOM
     // AND ALLOW THEM TO RECIEVE INPUT
     // LIKE STATEMACHINE?? SHARED VALUE?? CURRENT STATE TAG PERHAPS?? OR NOT MAYBE CAUSE THATLL BE DEFINED OUTSIDE WELL SEE
@@ -76,6 +88,11 @@ async fn main() -> Result<(), String> {
     let mut world = World::default();
     let mut update_schedule = Schedule::default();
     let mut draw_schedule = Schedule::default();
+
+    let mut ecs = ECS::new();
+    let entity = ecs.instantiate_entity();
+    //_ = ecs.add_component(Velocity {vec : vec2(0.0, 0.0)}, &entity);
+    //_ = ecs.add_component(Position {vec : vec2(0.0, 0.0)}, &entity);
 
     update_schedule.add_systems((
         gravity::apply_gravity,
@@ -140,6 +157,7 @@ async fn main() -> Result<(), String> {
 
         clear_background(color::DARKBLUE);
 
+        ecs.update();
         update_schedule.run(&mut world);
         draw_schedule.run(&mut world);
 

@@ -5,9 +5,9 @@ use crate::{animation::{Animation, AnimationParams}, input, statemachine::{State
 
 use super::{animated_sprite::AnimatedSprite, collider::Collider, sprite::Sprite};
 
+
 #[derive(Component)]
 pub struct Player {
-
     pub run_anim : Animation<Sprite>,
     pub walk_anim : Animation<Sprite>,
     pub idle_anim : Animation<Sprite>,
@@ -230,7 +230,6 @@ impl State for RunState {
 
     fn update(&self) {
         
-        println!("is running?");
     }
 
     fn enter(&self) {
@@ -250,7 +249,6 @@ impl State for IdleState {
 
     fn update(&self) {
         
-        println!("is idle :)");
     }
 
     fn enter(&self) {

@@ -1,4 +1,5 @@
-pub struct Statemachine 
+pub struct Statemachine
+
 {
     //states : HashMap<String, Box<dyn State>>,
     // SWITCH TO &MUT DYN STATE IF PERFORMANCE BECOMES AN ISSUE
@@ -9,7 +10,6 @@ impl Statemachine
 {
     pub fn new(start_state : Box<dyn State>) -> Statemachine {
 
-        //let tag = String::from("Fart");
         //let mut states = HashMap::<String,Box<dyn State>>::new();
         //states.insert(tag.clone(), start_state);
 
@@ -19,9 +19,8 @@ impl Statemachine
 
         machine
     }
-
     
-    pub fn transition<T>(&mut self, state : Box<dyn State>) {
+    pub fn transition(&mut self, state : Box<dyn State>) {
 
         if self.current_state.get_tag() == state.get_tag() { return; }
 
