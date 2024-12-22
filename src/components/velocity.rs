@@ -13,19 +13,21 @@ pub struct Velocity {
     pub vec : Vec2,
 }
 
-/*
+impl Velocity {
+
+    pub fn new() -> Self {
+
+        Velocity { vec : Vec2::new(6_f32, 9_f32) }
+    }
+}
+
 impl MyComponent for Velocity {
 
-    fn update(&mut self, entity : &Entity, entities : Rc<&mut ECS>) {
+    fn update(&mut self, entity : &Entity) {
         
         println!("Velocity is Updating!");
     }
-
-    fn as_any(&self) -> &dyn std::any::Any {
-        self
-    }
 }
-    */
 
 pub fn apply_velocity(mut query : Query<(&mut Position, &Velocity)>,) {
     

@@ -1,8 +1,10 @@
+use std::borrow::BorrowMut;
+
 use animated_sprite::{AnimatedSprite};
 use animator::Animator;
 use collider::{apply_collision, Collider};
 use bevy_ecs::component::Component;
-use components::component::{Entity, MyComponent, ECS};
+use components::component::ECS;
 use macroquad::audio::{self, load_sound, PlaySoundParams};
 use macroquad::camera::{self, set_camera, set_default_camera, Camera2D};
 use macroquad::color::{self, rgb_to_hsl, Color, BLACK, BLUE, ORANGE, RED, WHITE};
@@ -10,6 +12,7 @@ use macroquad::input::KeyCode;
 use macroquad::math::{vec2, Rect, Vec2};
 use macroquad::texture::{draw_texture, draw_texture_ex, load_texture, render_target, set_default_filter_mode, DrawTextureParams, RenderTarget, Texture2D};
 use macroquad::window::{clear_background, next_frame, request_new_screen_size, screen_height, screen_width, Conf};
+use position::Position;
 use schedule::{IntoSystemConfigs, Schedule};
 use sprite::Sprite;
 use sprite_renderer::SpriteRenderer;
@@ -32,26 +35,9 @@ mod input;
 mod time;
 mod vectors;
 
-#[derive(Component)]
-struct Position {
 
-    vec : Vec2,
-}
 
-/*
-impl MyComponent for Position {
 
-    fn update(&mut self, entity : &Entity, entities : Rc<&mut ECS>) {
-        
-        println!("Ohhh Now position updating");
-        //self.vec += entity.get_component::<Velocity>().expect("bruh").vec;
-    }
-
-    fn as_any(&self) -> &dyn std::any::Any {
-        self
-    }
-}
-    */
 
 
 #[derive(Component)]
@@ -91,8 +77,8 @@ async fn main() -> Result<(), String> {
 
     let mut ecs = ECS::new();
     let entity = ecs.instantiate_entity();
-    //_ = ecs.add_component(Velocity {vec : vec2(0.0, 0.0)}, &entity);
-    //_ = ecs.add_component(Position {vec : vec2(0.0, 0.0)}, &entity);
+    ecs.add_component(Velocity {vec : vec2(5.0, 0.0)}, &entity);
+    //let velocities = ecs.borrow_components_mut::<Velocity>();
 
     update_schedule.add_systems((
         gravity::apply_gravity,
@@ -155,9 +141,9 @@ async fn main() -> Result<(), String> {
         cam.render_target = Some(render_target.clone());
         set_camera(&cam);
 
-        clear_background(color::DARKBLUE);
+        clear_background(color::BLACK);
 
-        ecs.update();
+        //ecs.update();
         update_schedule.run(&mut world);
         draw_schedule.run(&mut world);
 
