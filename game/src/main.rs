@@ -1,8 +1,7 @@
 use animated_sprite::{AnimatedSprite};
 use animator::Animator;
 use collider::{apply_collision, Collider};
-use bevy_ecs::component::Component;
-use components::component::ECS;
+use ecs::component::ECS;
 use macroquad::audio::{self, load_sound, PlaySoundParams};
 use macroquad::camera::{self, set_camera, set_default_camera, Camera2D};
 use macroquad::color::{self, rgb_to_hsl, Color, BLACK, BLUE, ORANGE, RED, WHITE};
@@ -10,39 +9,11 @@ use macroquad::input::KeyCode;
 use macroquad::math::{Rect, };
 use macroquad::texture::{draw_texture, draw_texture_ex, load_texture, render_target, set_default_filter_mode, DrawTextureParams, RenderTarget, Texture2D};
 use macroquad::window::{clear_background, next_frame, request_new_screen_size, screen_height, screen_width, Conf};
-use position::Position;
 use schedule::{IntoSystemConfigs, Schedule};
-use sprite::Sprite;
-use sprite_renderer::SpriteRenderer;
-use stag::STag;
-use time::Timer;
 use bevy_ecs::*;
 use bevy_ecs::world::World;
-use components::*;
-use components::velocity::*;
-use components::gravity::*;
-use components::player::*;
-use vectors::*;
 
 mod statemachine;
-mod animator;
-mod animation;
-mod components;
-mod rotation;
-mod input;
-mod time;
-mod vectors;
-
-
-
-
-
-
-#[derive(Component)]
-struct Speed {
-
-    speed : f32,
-}
 
 const WINDOW_SIZE : (i32, i32) = (800,600);
 const WORLD_BOUNDS : (f32, f32) = (400.0, 300.0);
@@ -83,7 +54,7 @@ async fn main() -> Result<(), String> {
     
 
 
-    fn test(q : components::query::Query) {
+    fn test(q : ecs::query::Query) {
         println!("System runs");
 
     }
@@ -142,7 +113,6 @@ async fn main() -> Result<(), String> {
     let _ground = world.spawn(( 
         Position { vec : Vec2::new(0.0, 300.0) },
         Collider::new(Rect::new(0.0,0.0,1000.0,50.0), String::from("ground")),
-        STag { tag : String::from("ground") },
     )).id();
 
     let _left_wall = world.spawn(( 
@@ -180,7 +150,7 @@ async fn main() -> Result<(), String> {
         set_default_camera();
         let params = DrawTextureParams {
 
-            dest_size : Some(vec2(screen_width(), screen_height())),
+            dest_size : Some(macroquad::math::Vec2::new(screen_width(), screen_height())),
             flip_y : true,
             ..Default::default()
         };

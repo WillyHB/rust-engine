@@ -62,7 +62,8 @@ pub fn apply_collision(mut actor_query : Query<(&Position, &mut Velocity, &mut C
             let predicted_rect_y = actor_collider.global_bounds(
                 Vec2::new(actor_pos.vec.x, actor_pos.vec.y + actor_velocity.vec.y));
                 
-            let solid_rect = solid_collider.global_bounds(solid_position.vec);
+            let solid_rect = solid_collider.global_bounds(
+                macroquad::math::vec2(solid_position.vec.x, solid_position.vec.y));
 
             if predicted_rect_x.intersect(solid_rect).is_some() {
 

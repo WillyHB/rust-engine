@@ -1,7 +1,7 @@
 use core::fmt;
 use std::{ops::Mul, process::Output};
 
-use crate::vectors::*;
+use crate::math::vectors::*;
 
 
 impl std::ops::Add for Vec2 {

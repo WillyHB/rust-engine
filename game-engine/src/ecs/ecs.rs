@@ -1,63 +1,6 @@
-use std::{any::{Any, TypeId}, borrow::{Borrow, BorrowMut}, cell::{RefCell, RefMut}, collections::{hash_map::IterMut, HashMap}, ops::{Deref, DerefMut}, ptr::null_mut, rc::Rc};
+use std::{any::{Any, TypeId}, cell::{Ref, RefCell}, collections::HashMap};
 
-use bevy_ecs::system;
-use macroquad::math::Vec2;
-
-use crate::Velocity;
-
-use super::query::{ComponentBundle, Query};
-
-pub trait MyComponent {
-
-    //fn start()
-    //fn late_update?
-    //fn awake()
-    //fn destroy - Or make this an event of some sort?
-    fn update(&mut self, entity : &Entity);
-    // OR HAVE ACTIONS, THAT ARE RETURNED AND THEN PERFORMED
-    // Send in a list of all components?
-}
-
-pub trait ComponentVec {
-
-    fn as_any(&self) -> &dyn Any;
-    fn as_any_mut(&mut self) -> &mut dyn Any;
-    fn push_none(&mut self);
-    fn insert_none(&mut self, index : usize);
-    //fn insert(&mut self, index : usize, component : ComponentType);
-}
-
-type ComponentVecType<T> = RefCell<Vec<Option<Box<T>>>>;
-
-impl<T : MyComponent + 'static> ComponentVec for ComponentVecType<T> {
-
-    fn as_any(&self) -> &dyn Any{
-
-        self as &dyn Any
-    }
-
-    fn as_any_mut(&mut self) -> &mut dyn Any{
-
-        self as &mut dyn Any
-    }
-
-    fn push_none(&mut self) {
-        
-        self.get_mut().push(None);
-    }
-
-    fn insert_none(&mut self, index : usize) {
-        self.get_mut().insert(index, None);
-    }
-
-}
-
-
-#[derive(Eq, Hash, PartialEq, Clone, Copy)]
-pub struct Entity {
-
-    id : usize,
-}
+use super::{component::{Entity, MyComponent}, component_vec::{ComponentVec, ComponentVecType}, query::{ComponentBundle, Query}};
 
 pub struct ECS {
 
@@ -65,7 +8,7 @@ pub struct ECS {
     resources : HashMap<String, Box<dyn Any>>,
     number_of_entities : usize,
     entity_id : usize,
-    systems : Vec<Box<dyn Fn(Query)>>,
+    systems : Vec<Box<fn(Query)>>,
 }
 
 impl ECS {
@@ -82,7 +25,7 @@ impl ECS {
     }
 
     
-    pub fn add_system(&mut self, system : impl Fn(Query) + 'static) {
+    pub fn add_system(&mut self, system : fn(Query)) {
 
         self.systems.push(Box::new(system));
 
@@ -125,7 +68,7 @@ impl ECS {
             
         // Get component vec and insert component at id index
         let vec = self.component_map.get_mut(&id).unwrap().as_any_mut().downcast_mut::<ComponentVecType<T>>().unwrap().get_mut();
-        vec.insert(entity.id, Some(Box::new(component)));
+        vec.insert(entity.id(), Some(Box::new(component)));
     }
 
     
@@ -153,7 +96,7 @@ impl ECS {
             component_vec.push_none();
         }
 
-        Entity { id }
+        Entity::new(id)
     }
 
     pub fn kill_entity(&mut self, entity : &Entity) {
@@ -162,7 +105,7 @@ impl ECS {
 
         for c_vec in self.component_map.values_mut() {
 
-            c_vec.insert_none(entity.id);
+            c_vec.insert_none(entity.id());
         }
 
     }
@@ -172,4 +115,3 @@ impl ECS {
     // LIKE EVENTCHANNELS IN UNITY
 
 }
-

@@ -1,7 +1,6 @@
 use macroquad::time::get_time;
 
-use crate::animation::Animation;
-
+use  crate::animation::animation::Animation;
 
 pub struct Animator<T> where T : Clone{
 

@@ -24,11 +24,13 @@ pub struct Player {
 
     is_jumping : bool,
     pub statemachine : Statemachine,
+
+    pub speed : f32,
 }
 
 impl Player {
 
-    pub async fn new() -> Player {
+    pub async fn new(speed : f32) -> Player {
 
         let mut params = AnimationParams {
             reverse : false,
@@ -64,6 +66,7 @@ impl Player {
             jump_state : JumpState {},
             is_jumping : false,
             statemachine : Statemachine::new(Box::new(IdleState{})),
+            speed,
         }
     }
 

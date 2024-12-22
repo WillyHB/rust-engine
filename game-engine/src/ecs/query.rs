@@ -3,9 +3,17 @@ use std::any::TypeId;
 use super::component::MyComponent;
 
 
-pub struct Query {
+// CREATE MACRO HERE
+pub struct Query/*<T1,T2,...>*/ {
     bundle : ComponentBundle,
 
+}
+
+#[macro_export]
+macro_rules! query {
+    () => {
+        
+    };
 }
 
 impl Query {
@@ -14,6 +22,10 @@ impl Query {
 
         Query { bundle }
     }
+}
+
+pub trait ComponentBundleTrailt {
+
 }
 
 pub struct ComponentBundle {
