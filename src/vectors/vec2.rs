@@ -3,7 +3,8 @@ use std::{ops::Mul, process::Output};
 
 use crate::vectors::*;
 
-impl std::ops::Add for Vector2f64 {
+
+impl std::ops::Add for Vec2 {
 
     type Output = Self;
      
@@ -13,7 +14,7 @@ impl std::ops::Add for Vector2f64 {
     }
 }
 
-impl std::ops::Sub for Vector2f64 {
+impl std::ops::Sub for Vec2 {
 
     type Output = Self;
      
@@ -23,7 +24,7 @@ impl std::ops::Sub for Vector2f64 {
     }
 }
 
-impl std::ops::AddAssign for Vector2f64 {
+impl std::ops::AddAssign for Vec2 {
 
     fn add_assign(&mut self, rhs: Self) {
         
@@ -32,7 +33,7 @@ impl std::ops::AddAssign for Vector2f64 {
     }
 }
 
-impl std::ops::SubAssign for Vector2f64 {
+impl std::ops::SubAssign for Vec2 {
 
     fn sub_assign(&mut self, rhs: Self) {
         self.x -= rhs.x;
@@ -40,62 +41,62 @@ impl std::ops::SubAssign for Vector2f64 {
     }
 }
 
-impl Vector2 for Vector2f64 {
+impl Vector2<f32> for Vec2 {
 
-    fn new(x:f64,y:f64) -> Vector2f64 {
+    fn new(x:f32,y:f32) -> Self {
 
-        Vector2f64 {x,y}
+        Self {x,y}
     }
 
-    fn zero() -> Vector2f64 {
+    fn zero() -> Self {
 
-        Vector2f64 {x:0.0,y:0.0}
+        Self {x:0.0,y:0.0}
     }
 
-    fn one() -> Vector2f64 {
+    fn one() -> Self {
 
-        Vector2f64 {x:1.0,y:1.0}
+        Self {x:1.0,y:1.0}
     }
 
-    fn dot (v1 : Vector2f64, v2 : Vector2f64) -> f64 {
+    fn dot (v1 : Self, v2 : Self) -> f32{
 
         v1.x * v2.x + v1.y * v2.y
     }
 
-    fn magnitude(&self) -> f64 {
+    fn magnitude(&self) -> f32 {
 
         (self.x.powf(2.0) + self.y.powf(2.0)).sqrt()
     }
 
-    fn multiply(self, k : f64) -> Vector2f64 {
+    fn multiply(self, k : f32) -> Self {
 
-        Vector2f64{
+        Self{
         x : self.x * k,
         y : self.y * k,
         }
 
     }
 
-    fn multiply_assign(&mut self, k : f64) {
+    fn multiply_assign(&mut self, k : f32) {
 
         self.x *= k;
         self.y *= k;
     }
 
-    fn set_xy(&mut self, x : f64, y : f64) {
+    fn set_xy(&mut self, x : f32, y : f32) {
 
         self.x = x;
         self.y = y;
     }
 
-    fn set(&mut self, value : f64) {
+    fn set(&mut self, value : f32) {
 
         self.x = value;
         self.y = value;
     }
 }
 
-impl fmt::Display for Vector2f64 {
+impl fmt::Display for Vec2 {
 
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
         

@@ -9,3 +9,4 @@ pub mod animated_sprite;
 pub mod sprite_renderer;
 pub mod component;
 pub mod position;
+pub mod query;

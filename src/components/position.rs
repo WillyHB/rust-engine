@@ -1,5 +1,6 @@
 use bevy_ecs::{component::Component};
-use macroquad::math::Vec2;
+
+use crate::vectors::Vec2;
 
 use super::component::{Entity, MyComponent};
 

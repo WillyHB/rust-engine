@@ -3,13 +3,12 @@ use std::rc::Rc;
 use bevy_ecs::{component::Component, query::{With, Without}, system::Query};
 use macroquad::prelude::*;
 
-use crate::Position;
+use crate::{vectors::Vec2, Position};
 
 use super::{collider::{self, Collider}, component::{Entity, MyComponent, ECS}};
 
 #[derive(Component)]
 pub struct Velocity {
-
     pub vec : Vec2,
 }
 

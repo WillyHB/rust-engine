@@ -1,5 +1,3 @@
-use std::borrow::BorrowMut;
-
 use animated_sprite::{AnimatedSprite};
 use animator::Animator;
 use collider::{apply_collision, Collider};
@@ -9,7 +7,7 @@ use macroquad::audio::{self, load_sound, PlaySoundParams};
 use macroquad::camera::{self, set_camera, set_default_camera, Camera2D};
 use macroquad::color::{self, rgb_to_hsl, Color, BLACK, BLUE, ORANGE, RED, WHITE};
 use macroquad::input::KeyCode;
-use macroquad::math::{vec2, Rect, Vec2};
+use macroquad::math::{Rect, };
 use macroquad::texture::{draw_texture, draw_texture_ex, load_texture, render_target, set_default_filter_mode, DrawTextureParams, RenderTarget, Texture2D};
 use macroquad::window::{clear_background, next_frame, request_new_screen_size, screen_height, screen_width, Conf};
 use position::Position;
@@ -17,7 +15,6 @@ use schedule::{IntoSystemConfigs, Schedule};
 use sprite::Sprite;
 use sprite_renderer::SpriteRenderer;
 use stag::STag;
-use system::{Query, Resource};
 use time::Timer;
 use bevy_ecs::*;
 use bevy_ecs::world::World;
@@ -25,6 +22,7 @@ use components::*;
 use components::velocity::*;
 use components::gravity::*;
 use components::player::*;
+use vectors::*;
 
 mod statemachine;
 mod animator;
@@ -77,8 +75,35 @@ async fn main() -> Result<(), String> {
 
     let mut ecs = ECS::new();
     let entity = ecs.instantiate_entity();
-    ecs.add_component(Velocity {vec : vec2(5.0, 0.0)}, &entity);
-    //let velocities = ecs.borrow_components_mut::<Velocity>();
+    ecs.add_component(Velocity {vec : Vec2::new(5.0, 0.0)}, &entity);
+    {
+    let velocities = ecs.borrow_components::<Velocity>();
+    velocities.get_mut().get_mut(0).unwrap().as_mut().unwrap().vec.x = 3.0;
+    }
+    
+
+
+    fn test(q : components::query::Query) {
+        println!("System runs");
+
+    }
+
+    ecs.add_system(test);
+
+    let velocities2 = ecs.borrow_components::<Velocity>();
+
+    println!("PP{}", velocities2.get_mut().get_mut(0).unwrap().as_mut().unwrap().vec.x);
+
+    for vel in velocities2.get_mut() {
+
+        if let Some(val) = vel {
+
+            val.vec.x += 0.01;
+        }
+
+    }
+
+
 
     update_schedule.add_systems((
         gravity::apply_gravity,
@@ -97,7 +122,7 @@ async fn main() -> Result<(), String> {
 
     let _player = world.spawn((
         Position { vec : Vec2::new(10.0, 10.0)}, 
-        Velocity { vec : Vec2::ZERO, },
+        Velocity { vec : Vec2::zero(), },
         AnimatedSprite::new(Animator::new()),
         SpriteRenderer::new(Some(render_target.clone())),
         Player::new().await,
@@ -144,6 +169,7 @@ async fn main() -> Result<(), String> {
         clear_background(color::BLACK);
 
         //ecs.update();
+        ecs.run_systems();
         update_schedule.run(&mut world);
         draw_schedule.run(&mut world);
 
