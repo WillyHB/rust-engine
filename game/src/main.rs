@@ -1,7 +1,4 @@
-use animated_sprite::{AnimatedSprite};
-use animator::Animator;
-use collider::{apply_collision, Collider};
-use ecs::component::ECS;
+use game_engine::ecs::ecs::ECS;
 use macroquad::audio::{self, load_sound, PlaySoundParams};
 use macroquad::camera::{self, set_camera, set_default_camera, Camera2D};
 use macroquad::color::{self, rgb_to_hsl, Color, BLACK, BLUE, ORANGE, RED, WHITE};
@@ -13,7 +10,9 @@ use schedule::{IntoSystemConfigs, Schedule};
 use bevy_ecs::*;
 use bevy_ecs::world::World;
 
+
 mod statemachine;
+mod components;
 
 const WINDOW_SIZE : (i32, i32) = (800,600);
 const WORLD_BOUNDS : (f32, f32) = (400.0, 300.0);

@@ -6,4 +6,4 @@ edition = "2021"
 [dependencies]
 bevy_ecs = "0.14.2"
 macroquad = { version = "0.4", features = ["audio"] }
-game-engine = "0.1.0"
+game-engine = { path = "../game-engine" }
