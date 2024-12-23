@@ -1,21 +1,19 @@
 pub mod vec2;
+mod implement;
 
-#[derive(Copy, Clone)]
-pub struct Vec2 {
 
-    pub x : f32,
-    pub y : f32,
-}
+pub use implement::impl_vector2;
 
-#[derive(Copy,Clone)]
-pub struct Vec2I32 {
+use std::fmt;
 
-    pub x : i32,
-    pub y : i32,
-}
 
-// create aaaaaaa macro to implement vectors
 
+impl_vector2!(Vec2f32, f32);
+impl_vector2!(Vec2f64, f64);
+impl_vector2!(Vec2i32, i32);
+
+
+/// A trait to outline the structure of any 2D vector
 pub trait Vector2<NumType> {
     // The struct of the vector
 
@@ -23,7 +21,7 @@ pub trait Vector2<NumType> {
     fn zero() -> Self;
     fn one() -> Self;
     fn dot(v1 : Self, v2 : Self) ->NumType;
-    fn magnitude(&self) -> NumType;
+    fn magnitude(&self) -> f64;
     //fn add(&mut self, v : Vector2f64) -> Vector2f64;
     //fn subtract(&mut self, v : Vector2f64) -> Vector2f64;
     fn multiply(self, k :NumType) -> Self;

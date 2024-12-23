@@ -1,3 +1,7 @@
-pub mod animation;
 pub mod animator;
-pub mod animation_helpers;
+
+mod animation_helpers;
+mod animation;
+
+pub use animation_helpers::*;
+pub use animation::*;

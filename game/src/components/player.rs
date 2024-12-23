@@ -2,8 +2,7 @@ use bevy_ecs::{component::Component, query::{With, Without}, system::Query};
 use macroquad::prelude::*;
 
 use crate::{statemachine::{State, Statemachine}};
-use game_engine::{animation::{self, animation_helpers::animation::animation_from_spritesheet}, ecs::components};
-use game_engine::{animation::animation::{Animation, AnimationParams}, ecs::components::{animated_sprite::AnimatedSprite, collider::Collider, sprite::Sprite, velocity::Velocity}, input::{self, keyboard}};
+use game_engine::{animation::{{Animation, AnimationParams}, animation_from_spritesheet }, ecs::components::{animated_sprite::AnimatedSprite, collider::Collider, sprite::Sprite, velocity::Velocity}, input::keyboard};
 
 
 

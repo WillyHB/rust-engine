@@ -8,22 +8,21 @@ use game_engine::ecs::components::sprite::Sprite;
 use game_engine::ecs::components::sprite_renderer::SpriteRenderer;
 use game_engine::ecs::components::{animated_sprite, sprite_renderer};
 use game_engine::ecs::components::velocity::Velocity;
-use game_engine::ecs::ecs::ECS;
+use game_engine::ecs::ECS;
 use game_engine::ecs::query::Query;
 use game_engine::input::keyboard;
-use game_engine::math::vectors::Vec2;
 use game_engine::utility::time::Timer;
 use macroquad::audio::{self, load_sound, PlaySoundParams};
 use macroquad::camera::{self, set_camera, set_default_camera, Camera2D};
 use macroquad::color::{self, rgb_to_hsl, Color, BLACK, BLUE, ORANGE, RED, WHITE};
 use macroquad::input::KeyCode;
-use macroquad::math::{Rect, };
+use macroquad::math::{Rect };
 use macroquad::texture::{draw_texture, draw_texture_ex, load_texture, render_target, set_default_filter_mode, DrawTextureParams, RenderTarget, Texture2D};
 use macroquad::window::{clear_background, next_frame, request_new_screen_size, screen_height, screen_width, Conf};
 use schedule::{IntoSystemConfigs, Schedule};
 use bevy_ecs::*;
 use bevy_ecs::world::World;
-use game_engine::math::vectors::Vector2;
+use game_engine::math::vectors::{Vec2f32, Vector2};
 
 
 mod statemachine;
@@ -60,7 +59,7 @@ async fn main() -> Result<(), String> {
 
     let mut ecs = ECS::new();
     let entity = ecs.instantiate_entity();
-    ecs.add_component(Velocity {vec : Vec2::new(5.0, 0.0)}, &entity);
+    ecs.add_component(Velocity {vec : Vec2f32::new(5.0, 0.0)}, &entity);
     {
     let velocities = ecs.borrow_components::<Velocity>();
     velocities.get_mut().get_mut(0).unwrap().as_mut().unwrap().vec.x = 3.0;
@@ -106,8 +105,8 @@ async fn main() -> Result<(), String> {
     let speed : f32 = 600.0 * 0.005;
 
     let _player = world.spawn((
-        Position { vec : Vec2::new(10.0, 10.0)}, 
-        Velocity { vec : Vec2::zero(), },
+        Position { vec : Vec2f32::new(10.0, 10.0)}, 
+        Velocity { vec : Vec2f32::zero(), },
         AnimatedSprite::new(Animator::new()),
         SpriteRenderer::new(Some(render_target.clone())),
         Player::new(speed).await,
@@ -116,7 +115,7 @@ async fn main() -> Result<(), String> {
     ) ).id();
 
     let _wall = world.spawn((
-        Position { vec : Vec2::new(200.0, 0.0) },
+        Position { vec : Vec2f32::new(200.0, 0.0) },
         Collider::new(Rect::new(0.0,0.0,50.0,1000.0), String::from("walls")),
         Sprite::new(None, Rect::new(0.0, 0.0, 50.0, 1000.0), BLUE, None).await,
         SpriteRenderer::new(Some(render_target.clone())),
@@ -124,18 +123,18 @@ async fn main() -> Result<(), String> {
     )).id();
 
     let _ground = world.spawn(( 
-        Position { vec : Vec2::new(0.0, 300.0) },
+        Position { vec : Vec2f32::new(0.0, 300.0) },
         Collider::new(Rect::new(0.0,0.0,1000.0,50.0), String::from("ground")),
     )).id();
 
     let _left_wall = world.spawn(( 
-        Position { vec : Vec2::new(-50.0, 0.0) },
+        Position { vec : Vec2f32::new(-50.0, 0.0) },
         Collider::new(Rect::new(0.0,0.0,50.0,1000.0), String::default()),
     )).id();
 
     let _obstacle = world.spawn((
 
-        Position { vec : Vec2::new(150.0, 270.0) },
+        Position { vec : Vec2f32::new(150.0, 270.0) },
         Sprite::new(None, Rect::new(0.0,0.0,50.0,30.0), RED, None).await,
         SpriteRenderer::new(Some(render_target.clone())),
         Collider::new(Rect::new(0.0,0.0,50.0,30.0), String::from("ground")),

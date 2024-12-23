@@ -1,4 +1,3 @@
-pub mod animation {
     use macroquad::{color::WHITE, math::Rect, texture::{FilterMode, Texture2D}};
 
     use crate::{animation::animation::{Animation, AnimationParams}, ecs::components::sprite::Sprite};
@@ -22,6 +21,3 @@ pub mod animation {
 
         Animation::new(tag, frames, fps, &params)
     }
-
-
-}

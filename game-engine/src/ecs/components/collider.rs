@@ -1,6 +1,8 @@
 use bevy_ecs::{component::Component, entity::Entity, query::Without, system::Query};
 use macroquad::prelude::*;
 
+use crate::math::vectors::{Vec2f32, Vector2};
+
 use super::{position::Position, velocity::Velocity};
 
 
@@ -24,7 +26,7 @@ impl Collider {
         self.tag != String::default()
     }
 
-    pub fn global_bounds(&self, pos : Vec2) -> Rect {
+    pub fn global_bounds(&self, pos : Vec2f32) -> Rect {
 
         Rect::new(self.local_bounds.x + pos.x, 
             self.local_bounds.y + pos.y, 
@@ -57,12 +59,12 @@ pub fn apply_collision(mut actor_query : Query<(&Position, &mut Velocity, &mut C
         for (solid_position, solid_collider) in &mut solids_query {
 
             let predicted_rect_x = actor_collider.global_bounds(
-                Vec2::new(actor_pos.vec.x + actor_velocity.vec.x, actor_pos.vec.y));
+                Vec2f32::new(actor_pos.vec.x + actor_velocity.vec.x, actor_pos.vec.y));
             let predicted_rect_y = actor_collider.global_bounds(
-                Vec2::new(actor_pos.vec.x, actor_pos.vec.y + actor_velocity.vec.y));
+                Vec2f32::new(actor_pos.vec.x, actor_pos.vec.y + actor_velocity.vec.y));
                 
             let solid_rect = solid_collider.global_bounds(
-                macroquad::math::vec2(solid_position.vec.x, solid_position.vec.y));
+                Vec2f32::new(solid_position.vec.x, solid_position.vec.y));
 
             if predicted_rect_x.intersect(solid_rect).is_some() {
 
