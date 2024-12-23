@@ -5,3 +5,4 @@ edition = "2021"
 
 [dependencies]
 macroquad = { version = "0.4", features = ["audio"] }
+bevy_ecs = "0.14.2"

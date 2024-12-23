@@ -1,10 +1,10 @@
 use std::rc::Rc;
 
 use bevy_ecs::{component::Component, query::{With, Without}, system::Query};
+use crate::{ecs::component::{Entity, MyComponent}, math::{self, vectors::Vec2}};
+use crate::math::vectors::Vector2;
 
-use crate::vectors::*;
-
-use super::{collider::{self, Collider}, component::{Entity, MyComponent, ECS}, position::Position};
+use super::position::Position;
 
 #[derive(Component)]
 pub struct Velocity {

@@ -1,9 +1,8 @@
-use std::collections::{HashMap, HashSet};
-
 use bevy_ecs::{component::Component, entity::Entity, query::Without, system::Query};
 use macroquad::prelude::*;
 
-use crate::{Position, Velocity};
+use super::{position::Position, velocity::Velocity};
+
 
 #[derive(Component)]
 pub struct Collider {

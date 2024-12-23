@@ -1,10 +1,7 @@
-use crate::animated_sprite::AnimatedSprite;
 use macroquad::{prelude::*, time};
 use bevy_ecs::{component::Component, query::Without, system::Query};
 
-use crate::Position;
-
-use super::sprite::Sprite;
+use super::{animated_sprite::AnimatedSprite, position::Position, sprite::Sprite};
 
 #[derive(Component)]
 pub struct SpriteRenderer {

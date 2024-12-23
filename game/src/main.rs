@@ -1,4 +1,18 @@
+use components::player::{self, Player};
+use game_engine::animation::animator::Animator;
+use game_engine::ecs::components::animated_sprite::AnimatedSprite;
+use game_engine::ecs::components::collider::{apply_collision, Collider};
+use game_engine::ecs::components::gravity::{apply_gravity, Gravity};
+use game_engine::ecs::components::position::Position;
+use game_engine::ecs::components::sprite::Sprite;
+use game_engine::ecs::components::sprite_renderer::SpriteRenderer;
+use game_engine::ecs::components::{animated_sprite, sprite_renderer};
+use game_engine::ecs::components::velocity::Velocity;
 use game_engine::ecs::ecs::ECS;
+use game_engine::ecs::query::Query;
+use game_engine::input::keyboard;
+use game_engine::math::vectors::Vec2;
+use game_engine::utility::time::Timer;
 use macroquad::audio::{self, load_sound, PlaySoundParams};
 use macroquad::camera::{self, set_camera, set_default_camera, Camera2D};
 use macroquad::color::{self, rgb_to_hsl, Color, BLACK, BLUE, ORANGE, RED, WHITE};
@@ -9,6 +23,7 @@ use macroquad::window::{clear_background, next_frame, request_new_screen_size, s
 use schedule::{IntoSystemConfigs, Schedule};
 use bevy_ecs::*;
 use bevy_ecs::world::World;
+use game_engine::math::vectors::Vector2;
 
 
 mod statemachine;
@@ -53,7 +68,7 @@ async fn main() -> Result<(), String> {
     
 
 
-    fn test(q : ecs::query::Query) {
+    fn test(q : Query) {
         println!("System runs");
 
     }
@@ -76,10 +91,10 @@ async fn main() -> Result<(), String> {
 
 
     update_schedule.add_systems((
-        gravity::apply_gravity,
+        game_engine::ecs::components::gravity::apply_gravity,
         player::player_update.after(apply_gravity),
-        collider::apply_collision.after(apply_gravity),
-        velocity::apply_velocity.after(apply_collision), 
+        game_engine::ecs::components::collider::apply_collision.after(apply_gravity),
+        game_engine::ecs::components::velocity::apply_velocity.after(apply_collision), 
     ));
 
     draw_schedule.add_systems((
@@ -95,8 +110,7 @@ async fn main() -> Result<(), String> {
         Velocity { vec : Vec2::zero(), },
         AnimatedSprite::new(Animator::new()),
         SpriteRenderer::new(Some(render_target.clone())),
-        Player::new().await,
-        Speed { speed },
+        Player::new(speed).await,
         Gravity::default(),
         Collider::new(Rect::new(0.0,0.0,50.0,50.0), String::from("player")),
     ) ).id();
@@ -142,7 +156,7 @@ async fn main() -> Result<(), String> {
         update_schedule.run(&mut world);
         draw_schedule.run(&mut world);
 
-        if input::is_pressed(KeyCode::Q) { break 'running; }
+        if keyboard::is_pressed(KeyCode::Q) { break 'running; }
 
         timer.update();
 

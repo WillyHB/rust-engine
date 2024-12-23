@@ -1,4 +1,8 @@
-mod animation {
+pub mod animation {
+    use macroquad::{color::WHITE, math::Rect, texture::{FilterMode, Texture2D}};
+
+    use crate::{animation::animation::{Animation, AnimationParams}, ecs::components::sprite::Sprite};
+
 
     pub async fn animation_from_spritesheet(tag : &str, sheet : Texture2D, size_x : u32, size_y : u32, row : u32, num : u8, fps : u32, params : &AnimationParams) -> Animation<Sprite> {
 

@@ -1,7 +1,7 @@
 use bevy_ecs::{component::Component, system::Query};
 use macroquad::prelude::*;
 
-use crate::{animation::{Animation, AnimationParams}, animator::Animator};
+use crate::animation::animator::Animator;
 
 use super::sprite::Sprite;
 

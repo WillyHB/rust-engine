@@ -1,9 +1,10 @@
 use bevy_ecs::{component::Component, query::{With, Without}, system::Query};
 use macroquad::prelude::*;
 
-use crate::{animation::{Animation, AnimationParams}, input, statemachine::{State, Statemachine}, time::Timer, Position, Speed, Velocity};
+use crate::{statemachine::{State, Statemachine}};
+use game_engine::{animation::{self, animation_helpers::animation::animation_from_spritesheet}, ecs::components};
+use game_engine::{animation::animation::{Animation, AnimationParams}, ecs::components::{animated_sprite::AnimatedSprite, collider::Collider, sprite::Sprite, velocity::Velocity}, input::{self, keyboard}};
 
-use super::{animated_sprite::AnimatedSprite, collider::Collider, sprite::Sprite};
 
 
 #[derive(Component)]
@@ -38,15 +39,17 @@ impl Player {
             start_frame : 0,
         };
 
-        let player_texture = load_texture("assets/player_sheet.png").await.unwrap();
-        let walk_anim = AnimatedSprite::animation_from_spritesheet("walk", player_texture.clone(), 16, 20, 5, 8, 12, &params).await;
-        let idle_anim = AnimatedSprite::animation_from_spritesheet("idle", player_texture.clone(), 16, 20, 1, 4, 6, &params).await;
-        let run_anim = AnimatedSprite::animation_from_spritesheet("run", player_texture.clone(), 16, 20, 4, 8, 12, &params).await;
+        // DO SOMETHING HERE
+        // Asset importer class yessir
+        let player_texture = load_texture("game/assets/player_sheet.png").await.unwrap();
+        let walk_anim = animation_from_spritesheet("walk", player_texture.clone(), 16, 20, 5, 8, 12, &params).await;
+        let idle_anim = animation_from_spritesheet("idle", player_texture.clone(), 16, 20, 1, 4, 6, &params).await;
+        let run_anim = animation_from_spritesheet("run", player_texture.clone(), 16, 20, 4, 8, 12, &params).await;
 
         params.repeat = false;
-        let fall_anim = AnimatedSprite::animation_from_spritesheet("fall", player_texture.clone(), 16, 20, 6, 3, 6, &params).await;
-        let land_anim = AnimatedSprite::animation_from_spritesheet("land", player_texture.clone(), 16, 20, 3, 6, 12, &params).await;
-        let jump_anim = AnimatedSprite::animation_from_spritesheet("jump", player_texture.clone(), 16, 20, 2, 4, 12, &params).await;
+        let fall_anim = animation_from_spritesheet("fall", player_texture.clone(), 16, 20, 6, 3, 6, &params).await;
+        let land_anim = animation_from_spritesheet("land", player_texture.clone(), 16, 20, 3, 6, 12, &params).await;
+        let jump_anim = animation_from_spritesheet("jump", player_texture.clone(), 16, 20, 2, 4, 12, &params).await;
 
         params.repeat = false;
 
@@ -84,23 +87,23 @@ impl Player {
     }
 }
 
-pub fn player_update(mut query : Query<(&mut Velocity, &Speed, &Collider, &mut AnimatedSprite, &mut Player)>,
+pub fn player_update(mut query : Query<(&mut Velocity, &Collider, &mut AnimatedSprite, &mut Player)>,
 collider_query : Query<&Collider, Without<Player>>) {
 
-    for (mut velocity, speed, collider, mut sprite, mut player) in &mut query {
+    for (mut velocity, collider, mut sprite, mut player) in &mut query {
 
-        if input::is_pressed(KeyCode::D) {
+        if keyboard::is_pressed(KeyCode::D) {
 
             player.statemachine.transition(Box::new(IdleState {}));
             sprite.flip_x = false;
-            velocity.vec.x = speed.speed;
+            velocity.vec.x = player.speed;
         }
 
-        else if input::is_pressed(KeyCode::A) {
+        else if keyboard::is_pressed(KeyCode::A) {
 
             player.statemachine.transition(Box::new(RunState {}));
             sprite.flip_x = true;
-            velocity.vec.x = -speed.speed;
+            velocity.vec.x = -player.speed;
         }
 
         if !player.is_grounded(collider, &collider_query) {
@@ -115,13 +118,13 @@ collider_query : Query<&Collider, Without<Player>>) {
 
         player.is_jumping = false;
 
-        if input::is_pressed(KeyCode::W) {velocity.vec.y = -1.5; player.is_jumping = true }
+        if keyboard::is_pressed(KeyCode::W) {velocity.vec.y = -1.5; player.is_jumping = true }
 
-        if input::is_pressed(KeyCode::D) { 
+        if keyboard::is_pressed(KeyCode::D) { 
 
             sprite.animator.play(Animation::from(&player.run_anim));
         }
-        else if input::is_pressed(KeyCode::A) {
+        else if keyboard::is_pressed(KeyCode::A) {
 
             sprite.animator.play(Animation::from(&player.run_anim));
         }

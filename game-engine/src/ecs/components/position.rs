@@ -1,8 +1,6 @@
 use bevy_ecs::{component::Component};
 
-use crate::vectors::Vec2;
-
-use super::component::{Entity, MyComponent};
+use crate::{ecs::component::{Entity, MyComponent}, math::vectors::Vec2};
 
 
 #[derive(Component)]

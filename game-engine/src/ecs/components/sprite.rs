@@ -1,9 +1,6 @@
 use bevy_ecs::{component::Component, system::Query};
 use macroquad::{camera::{set_camera, Camera2D}, color::{Color, WHITE}, math::{Rect, Vec2}, texture::{draw_texture_ex, load_texture, DrawTextureParams, RenderTarget, Texture2D}, window::clear_background};
 
-use crate::Position;
-
-
 #[derive(Clone, Component)] 
 pub struct Sprite {
 
@@ -27,7 +24,7 @@ impl Sprite {
         let texture : Texture2D = 
         match texture {
             Some(tex) => { tex }
-            None => { load_texture("assets/default.png").await.expect("No default image asset") }
+            None => { load_texture("game-engine/default-assets/default.png").await.expect("No default image asset at path") }
         };
 
         Sprite { texture, destination_bounds, colour, rotation : 0.0, source, flip_x : false, flip_y : false }
